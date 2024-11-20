@@ -2,6 +2,7 @@ package study.my_board.api;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import study.my_board.domain.Post;
@@ -55,10 +56,10 @@ public class PostApiController {
                 });
     }
 
-    @Secured("ROLE_ADMIN")
+//    @Secured("ROLE_ADMIN")
+    @PreAuthorize("@postService.canDeletePost(#id, principal.id)") //메서드 호출 전에 권한을 검사.
     @DeleteMapping("/board/{id}")
     void deletePost(@PathVariable Long id) {
-//        postService.deletePost(id);
         postRepository.deleteById(id);
     }
 

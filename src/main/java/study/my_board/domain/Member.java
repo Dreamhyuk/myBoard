@@ -31,9 +31,9 @@ public class Member {
     private Boolean enabled;
 
     //== 연관관계 메서드 ==//
-    public void addMemberRoles(MemberRole memberRole) {
+    public void addRole(Role role) {
+        MemberRole memberRole = MemberRole.createMemberRole(this, role);
         memberRoles.add(memberRole);
-        memberRole.setMember(this);
     }
 
     //== 생성 메서드 ==//

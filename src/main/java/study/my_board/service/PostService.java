@@ -100,24 +100,16 @@ public class PostService {
     }
 
     //삭제 권한: 작성자 & admin
-//    public boolean canDeletePost(Long postId, String currentUsername) {
-//        Long currentUserId = memberService.findIdByUsername(currentUsername);
-//
-//        return isAuthor(postId, currentUsername) || memberService.isAdmin(currentUserId);
-//    }
     public boolean canDeletePost(Long postId, Long currentUserId) {
         return isAuthor(postId, currentUserId) || memberService.isAdmin(currentUserId);
     }
 
     public boolean isAuthor(Long postId, Long currentUserId) {
-        Post post = postRepository.findById(postId).orElse(null);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(()  -> new IllegalArgumentException("Post not found!"));
         boolean result = post.getMember().getId().equals(currentUserId);
 
         return result;
-
-//        return postRepository.findById(postId)
-//                .map(post -> post.getMember().getId().equals(currentUserId))
-//                .orElse(false);
     }
 
     @Transactional

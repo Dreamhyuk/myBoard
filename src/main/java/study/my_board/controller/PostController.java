@@ -76,12 +76,19 @@ public class PostController {
         PostDto postDto = postService.findPost(postId);
         Long currentUserId = currentUser.getId();
 
+        boolean canEdit = postService.canEditPost(postId, currentUserId);
+        boolean canDelete = postService.canDeletePost(postId, currentUserId);
+
+        System.out.println("canEdit = " + canEdit);
+        System.out.println("canDelete = " + canDelete);
+
         model.addAttribute("board", postDto);
-        model.addAttribute("canEdit", postService.canEditPost(postId, currentUserId));
-        model.addAttribute("canDelete", postService.canDeletePost(postId, currentUserId));
+        model.addAttribute("canEdit", canEdit);
+        model.addAttribute("canDelete", canDelete);
 
         return "view";
     }
+
 
     @GetMapping("/board/modify/{postId}")
     public String modifyPost(@PathVariable Long postId, Model model) {
@@ -114,12 +121,5 @@ public class PostController {
 
         return "redirect:/board/list";
     }
-
-
-//    @GetMapping("/board/join")
-//    public String login() {
-//        return "login";
-//    }
-
 
 }

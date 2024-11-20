@@ -16,6 +16,7 @@ import study.my_board.repository.RoleRepository;
 //import study.my_board.repository.MemberRepository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,33 +34,30 @@ public class MemberService {
     @Transactional
     public Long join(@Valid MemberDto memberDto) {
 
-        String username = memberDto.getUsername();
-        String password = memberDto.getPassword();
-
         //password를 암호화
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = passwordEncoder.encode(memberDto.getPassword());
 
-        Member member = Member.createMember(username, encodedPassword);
-        memberRepository.save(member);
+        Member member = Member.createMember(memberDto.getUsername(), encodedPassword);
 
-        Role defaultRole = roleRepository.findByName("ROLE_USER")
+        Role defaultRole = roleRepository.findRoleByName("ROLE_USER")
                 .orElseThrow(() -> new IllegalStateException("Default role not found"));
+        member.addRole(defaultRole);
 
-        MemberRole memberRole = MemberRole.createMemberRole(member, defaultRole);
-        memberRoleRepository.save(memberRole);
-
-//        member.setPassword(encodedPassword);
-//        member.setEnabled(true);
-//        Role role = new Role();
-//        member.getMemberRoles().add()
+        memberRepository.save(member);
 
         return member.getId();
     }
 
     //role 타입 비교
     public boolean isAdmin(Long memberId) {
-        List<String> roles = memberRepository.findRolesByMemberId(memberId);
-        return roles.contains("ROLE_ADMIN");
+//        List<String> roles = memberRepository.findRolesByMemberId(memberId);
+//        return roles.contains("ROLE_ADMIN");
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("Member not found!"));
+
+        return member.getMemberRoles().stream()
+                .map(MemberRole::getRole)
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
     }
 
     public Long findIdByUsername(String username) {
