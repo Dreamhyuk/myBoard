@@ -8,7 +8,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -59,14 +58,16 @@ public class PostController {
 
     @PostMapping("/board/write")
     public String writePro(@Valid @ModelAttribute("board") PostDto postDto, BindingResult bindingResult,
+                           @AuthenticationPrincipal CustomUserDetails currentUser,
                            Authentication authentication) throws Exception {
         boardValidator.validate(postDto, bindingResult);
         if (bindingResult.hasErrors()) {
             return "writeForm";
         }
 
-        String username = authentication.getName();
-        postService.write(postDto, username);
+//        String username = authentication.getName();
+        Long memberId = currentUser.getId();
+        postService.write(postDto, memberId);
         return "redirect:/board/list";
     }
 
@@ -79,10 +80,7 @@ public class PostController {
         boolean canEdit = postService.canEditPost(postId, currentUserId);
         boolean canDelete = postService.canDeletePost(postId, currentUserId);
 
-        System.out.println("canEdit = " + canEdit);
-        System.out.println("canDelete = " + canDelete);
-
-        model.addAttribute("board", postDto);
+        model.addAttribute("post", postDto);
         model.addAttribute("canEdit", canEdit);
         model.addAttribute("canDelete", canDelete);
 
@@ -93,8 +91,8 @@ public class PostController {
     @GetMapping("/board/modify/{postId}")
     public String modifyPost(@PathVariable Long postId, Model model) {
 
-        PostDto findPost = postService.findPost(postId);
-        model.addAttribute("post", findPost);
+        PostDto postDto = postService.findPost(postId);
+        model.addAttribute("post", postDto);
 
         return "modifyPost";
     }

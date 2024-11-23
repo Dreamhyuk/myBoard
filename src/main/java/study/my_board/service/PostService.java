@@ -52,11 +52,13 @@ public class PostService {
     }
 
     //글 작성
-    @Transactional
-    public Long write(PostDto postDto, String username) {
+    @Transactional(readOnly = false)
+    public Long write(PostDto postDto, Long memberId) {
 
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));;
+//        Member member = memberRepository.findByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         //Dto를 엔티티로 변환
         Post post = Post.builder()
@@ -64,7 +66,6 @@ public class PostService {
                 .content(postDto.getContent())
                 .member(member)
                 .build();
-
         postRepository.save(post);
 
         return post.getId();

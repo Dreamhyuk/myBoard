@@ -12,12 +12,11 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     //select p from Post p where p.title = :title
-    List<Post> findByTitle(String title);
+//    List<Post> findByTitle(String title);
 
     List<Post> findByTitleOrContent(String title, String content);
 
     Page<Post> findByTitleContainingOrContentContaining(String title, String content, Pageable pageable);
 
-//    List<>
 
 }

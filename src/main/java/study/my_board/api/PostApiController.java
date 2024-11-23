@@ -1,7 +1,6 @@
 package study.my_board.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +15,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostApiController {
 
-    private final PostService postService;
     private final PostRepository postRepository;
-
 
     @GetMapping("/board")
     List<Post> all(@RequestParam(required = false, defaultValue = "") String title,

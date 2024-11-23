@@ -21,7 +21,7 @@ public class PostDto {
     private String title;
 
     @NotNull
-    @Size(min = 2, message = "내용을 입력하세요.")
+    @Size(min = 2, message = "내용을 2자 이상 입력하세요.")
     private String content;
 
     private MemberDto memberDto;

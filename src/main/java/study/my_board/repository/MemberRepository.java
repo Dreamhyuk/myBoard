@@ -19,21 +19,13 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
         @EntityGraph(attributePaths = { "posts" })
         List<Member> findAll();
 
-        Optional<Member> findByUsername(String username);
-
         @Query("select r.name from Role r " +
                 "join r.memberRoles mr " +
                 "join mr.member m " +
                 "where m.id = :memberId")
         List<String> findRolesByMemberId(@Param("memberId") Long memberId);
 
-        public Member findOneByUsername(String username);
 
-
-//        @Query("select m from member m " +
-//                "join fetch m.memberRoles mr " +
-//                "join fetch mr.role " +
-//                "where m.username = :username")
         @Query("select m from Member m " +
                 "join fetch m.memberRoles mr " +
                 "join fetch mr.role " +

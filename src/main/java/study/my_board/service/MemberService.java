@@ -60,11 +60,11 @@ public class MemberService {
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
     }
 
-    public Long findIdByUsername(String username) {
-        Member member = memberRepository.findOneByUsername(username);
-
-        return member.getId();
-    }
+//    public Long findIdByUsername(String username) {
+//        Member member = memberRepository.findOneByUsername(username);
+//
+//        return member.getId();
+//    }
 
 
 }

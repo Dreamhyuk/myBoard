@@ -23,8 +23,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberRole> memberRoles = new ArrayList<>();
 
-//    @OneToMany(mappedBy = "member")
-//    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
 
     private String username;
     private String password;
