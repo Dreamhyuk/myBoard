@@ -28,9 +28,8 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
-//    @OneToMany(mappedBy = "post")
-//    @Builder.Default
-//    private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
 
     @NotNull
     @Size(min = 2, max = 60)
@@ -40,11 +39,16 @@ public class Post {
     @Size(min = 2)
     private String content;
 
+    public Post(Member member, String title, String content) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+    }
 
     //== 생성 메서드 ==//
     @Builder
-    public static Post createPost(Long id, Member member, String title, String content) {
-        return new Post(id, member, title, content);
+    public static Post createPost(Member member, String title, String content) {
+        return new Post(member, title, content);
     }
 
 
