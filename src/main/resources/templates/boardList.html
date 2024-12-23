@@ -41,9 +41,9 @@
                 <tr th:each="board : ${list}">
                     <td th:text="${board.id}">Mark</td>
                     <td class="limit-text">
-                        <a th:text="${board.title}" th:href="@{/board/view(postId=${board.id})}">Otto</a>
+                        <a th:text="${board.title}" th:href="@{/board/view/{postId}(postId=${board.id})}">Otto</a>
                     </td>
-                    <td th:text="${board.memberDto.username}">홍길동</td>
+                    <td th:text="${board.author}">홍길동</td>
                     <td class="text-center">2020-04-05</td>
                     <td class="text-center">3</td>
                 </tr>
@@ -65,7 +65,8 @@
         <div class="text-right">
             <a type="button" class="btn btn-primary" th:href="@{/board/write}">글 쓰기</a>
         </div>
-    </div>
+
+
 
 </main>
 <footer th:replace="fragments/common :: footer"></footer>

@@ -14,9 +14,9 @@ import static jakarta.persistence.FetchType.*;
 @Entity
 @Table(name = "posts")
 @Getter @Setter
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,25 +39,24 @@ public class Post {
     @Size(min = 2)
     private String content;
 
-    public Post(Member member, String title, String content) {
-        this.member = member;
-        this.title = title;
-        this.content = content;
-    }
-
-    //== 생성 메서드 ==//
-    @Builder
-    public static Post createPost(Member member, String title, String content) {
-        return new Post(member, title, content);
-    }
-
+//    @Builder
+//    public Post(Member member, String title, String content) {
+//        this.member = member;
+//        this.title = title;
+//        this.content = content;
+//    }
+//
+//    //== 생성 메서드 ==//
+//    @Builder
+//    public static Post createPost(Member member, String title, String content) {
+//        return new Post(member, title, content);
+//    }
 
     //== 연관관계 메서드 ==//
     public void setMember(Member member) {
         this.member = member;
         member.getPosts().add(this);
     }
-
 
     //== 게시글 수정 메서드 ==//
     public void updatePost(String title, String content) {

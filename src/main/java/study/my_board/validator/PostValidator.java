@@ -11,12 +11,12 @@ public class PostValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return PostDto.class.equals(clazz);
+        return PostDto.Request.class.equals(clazz);
     }
 
     @Override
     public void validate(Object obj, Errors errors) {
-        PostDto post = (PostDto) obj;
+        PostDto.Request post = (PostDto.Request) obj;
         if (!StringUtils.hasText(post.getContent())) {
            errors.rejectValue("content", "key", "");
         }

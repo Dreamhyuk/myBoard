@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -30,12 +31,13 @@ public class WebSecurityConfig {
 
 
     @Bean
+    @Order(1) //우선순위를 가장 높게 설정
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf().disable()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/account/signup", "/css/**", "/api/**").permitAll()
+                        .requestMatchers("/api/**").permitAll() // 우선순위를 명확히
+                        .requestMatchers("/", "/account/signup", "/css/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

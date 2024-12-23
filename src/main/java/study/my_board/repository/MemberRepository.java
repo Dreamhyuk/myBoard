@@ -14,9 +14,9 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 //    select m from Member m where m.username = :username
-//    List<Member> findByUsername(String username);
+        Member findByUsername(String username);
 
-        @EntityGraph(attributePaths = { "posts" })
+        @EntityGraph(attributePaths = {"posts"})
         List<Member> findAll();
 
         @Query("select r.name from Role r " +

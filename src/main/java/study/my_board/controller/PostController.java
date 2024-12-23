@@ -6,14 +6,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import study.my_board.authentication.CustomUserDetails;
+import study.my_board.dto.CommentDto;
 import study.my_board.dto.PostDto;
+import study.my_board.service.CommentService;
 import study.my_board.service.PostService;
 import study.my_board.validator.PostValidator;
 
@@ -21,6 +22,7 @@ import study.my_board.validator.PostValidator;
 @RequiredArgsConstructor
 public class PostController {
 
+    private final CommentService commentService;
     private final PostService postService;
     private final PostValidator boardValidator;
 
@@ -35,7 +37,7 @@ public class PostController {
                             @PageableDefault(page = 0, size = 8, sort = "id", direction = Sort.Direction.DESC) Pageable pageable,
                             @RequestParam(required = false, defaultValue = "") String searchKeyword) {
 
-        Page<PostDto> postDtos = postService.findBySearchKeyword(searchKeyword, searchKeyword, pageable);
+        Page<PostDto.Response> postDtos = postService.findBySearchKeyword(searchKeyword, searchKeyword, pageable);
 
         int nowPage = postDtos.getPageable().getPageNumber() + 1; //page가 0부터 시작하기 때문에 +1
         int startPage = Math.max(1, nowPage - 3);
@@ -51,31 +53,31 @@ public class PostController {
 
     @GetMapping("/board/write")
     public String writePost(Model model) {
-        model.addAttribute("board", new PostDto());
-
+        model.addAttribute("board", new PostDto.Request());
         return "writeForm";
     }
 
     @PostMapping("/board/write")
-    public String writePro(@Valid @ModelAttribute("board") PostDto postDto, BindingResult bindingResult,
-                           @AuthenticationPrincipal CustomUserDetails currentUser,
-                           Authentication authentication) throws Exception {
-        boardValidator.validate(postDto, bindingResult);
+    public String writePro(@Valid @ModelAttribute("board") PostDto.Request request, BindingResult bindingResult,
+                           @AuthenticationPrincipal CustomUserDetails currentUser) throws Exception {
+        boardValidator.validate(request, bindingResult);
         if (bindingResult.hasErrors()) {
             return "writeForm";
         }
 
-//        String username = authentication.getName();
         Long memberId = currentUser.getId();
-        postService.write(postDto, memberId);
+        postService.write(request, memberId);
         return "redirect:/board/list";
     }
 
-    @GetMapping("/board/view")
-    public String viewPost(Long postId, Model model, @AuthenticationPrincipal CustomUserDetails currentUser) {
+    @GetMapping("/board/view/{postId}")
+    public String viewPost(@PathVariable Long postId, Model model,
+                           @AuthenticationPrincipal CustomUserDetails currentUser,
+                           @PageableDefault(size = 5, direction = Sort.Direction.ASC) Pageable pageable) {
 
-        PostDto postDto = postService.findPost(postId);
         Long currentUserId = currentUser.getId();
+        PostDto.Response postDto = postService.findPost(postId);
+        Page<CommentDto.Response> comments = commentService.findAll(postId, pageable);
 
         boolean canEdit = postService.canEditPost(postId, currentUserId);
         boolean canDelete = postService.canDeletePost(postId, currentUserId);
@@ -84,6 +86,15 @@ public class PostController {
         model.addAttribute("canEdit", canEdit);
         model.addAttribute("canDelete", canDelete);
 
+        int nowPage = comments.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(1, nowPage - 2);
+        int endPage = Math.min(comments.getTotalPages(), nowPage + 2);
+
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("comments", comments);
+
         return "view";
     }
 
@@ -91,7 +102,7 @@ public class PostController {
     @GetMapping("/board/modify/{postId}")
     public String modifyPost(@PathVariable Long postId, Model model) {
 
-        PostDto postDto = postService.findPost(postId);
+        PostDto.Response postDto = postService.findPost(postId);
         model.addAttribute("post", postDto);
 
         return "modifyPost";
@@ -99,15 +110,16 @@ public class PostController {
 
     @PostMapping("/board/update/{postId}")
     public String updatePost(@PathVariable Long postId,
-                             @Valid @ModelAttribute("post") PostDto postDto,BindingResult bindingResult, Model model) throws Exception {
-        boardValidator.validate(postDto, bindingResult);
+                             @Valid @ModelAttribute("post") PostDto.Request request,
+                             BindingResult bindingResult, Model model) throws Exception {
+        boardValidator.validate(request, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            model.addAttribute("id", postDto.getId());
+            model.addAttribute("id", request.getId());
             return "modifyPost";
         }
 
-        postService.updatePost(postId, postDto);
+        postService.updatePost(postId, request);
 
         return "redirect:/board/list";
     }

@@ -15,20 +15,43 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" th:replace="fragments/common :: menu('view')"></nav>
 
     <div class="container">
-        <div class="mb-3">
-            <label for="title" class="form-label">제목</label>
-            <input type="text" class="form-control" id="title" placeholder="제목" th:field="${post.title}" disabled readonly>
-        </div>
-        <div class="mb-3">
-            <label for="content" class="form-label">내용</label>
-            <textarea class="form-control" id="content" rows="6" placeholder="내용을 입력하세요."
-                      th:field="${post.content}" disabled readonly></textarea>
+        <header>
+            <div class="text-container">
+                <h1 class="fw-bolder mb-1 left-text" th:text="${post.title}"></h1>
+                <div class="right-text" >2020-00-00</div>
+            </div>
+            <div class="text-muted fst-italic mb-2" style="font-weight: bold" th:text="${post.author}" ></div>
+        </header>
+
+        <hr class="section-divider">
+        <div class="mb-3" style="margin-top: 20px; min-height: 120px;">
+            <p th:text="${post.content}"></p>
         </div>
         <div class="text-right">
             <a class="btn btn-primary" th:if="${canEdit}" th:href="@{/board/modify/{postId}(postId = ${post.id})}">수정</a>
             <button type="button" class="btn btn-primary" th:if="${canDelete}"
                th:onclick="|deletePost(${post.id})|">글 삭제</button>
         </div>
+
+        <div style="margin-top: 40px;"><span th:text="${comments.totalElements}"></span> Comments</div>
+        <hr class="section-divider">
+        <ul class="list-group list-group-flush" style="margin-top: -15px;">
+            <li class="list-group-item" th:each="item : ${comments}">
+                <div th:text="${item.username}" class="text-muted fst-italic mb-2" style="font-weight: bold">작성자</div>
+                <div th:text="${item.comment}">댓글 내용</div>
+            </li>
+        </ul>
+        <!-- 댓글 작성 폼 -->
+        <form id="comment-form" style="margin-top: 10px;">
+            <div class="form-group">
+                <label for="comment-content" class="comment-label">댓글 추가:</label>
+                <textarea id="comment-content" rows="3" placeholder="댓글을 남겨보세요" style="width: 100%"></textarea>
+            </div>
+            <div class="text-right">
+                <button type="button" class="btn btn-primary" id="create-comment-btn"
+                        th:data-id="${post.id}">댓글 작성</button>
+            </div>
+        </form>
     </div>
 
     <footer th:replace="fragments/common :: footer"></footer>
@@ -45,6 +68,29 @@
                 }
             });
         }
+
+        $('#create-comment-btn').on('click', function() {
+            const id = $(this).data('id'); // 버튼의 data-id 값을 가져옴
+            const commentData = {
+                comment: $('#comment-content').val() // 댓글 내용
+            };
+            console.log('전송할 데이터:', commentData);
+
+            $.ajax({
+                url: '/api/board/view/' + id + '/comments',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(commentData),
+                success: function(result) {
+                    alert('댓글을 작성했습니다.');
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('댓글 작성에 실패했습니다.');
+                }
+            });
+        });
+
     </script>
 
 </body>

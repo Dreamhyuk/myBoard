@@ -1,10 +1,14 @@
 package study.my_board.api;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import study.my_board.authentication.CustomUserDetails;
 import study.my_board.domain.Post;
+import study.my_board.dto.PostDto;
 import study.my_board.repository.PostRepository;
 import study.my_board.service.PostService;
 
@@ -15,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostApiController {
 
+    private final PostService postService;
     private final PostRepository postRepository;
 
     @GetMapping("/board")
@@ -27,9 +32,12 @@ public class PostApiController {
         }
     }
 
-    @PostMapping("/board")
-    Post newPost(@RequestBody Post newPost) {
-        return postRepository.save(newPost);
+    //글 작성
+    @PostMapping("/board/write")
+    public ResponseEntity write(@RequestBody PostDto.Request request,
+                                @AuthenticationPrincipal CustomUserDetails currentUser) {
+        return ResponseEntity.ok(postService.write(request, currentUser.getId()));
+
     }
 
 

@@ -15,7 +15,7 @@ spring:
       hibernate:
         #        show_sql: ture
         format_sql: true
-        dialect:
+        default_batch_fetch_size: 10
 
 logging.level:
   org.hibernate.SQL: debug

@@ -37,6 +37,16 @@ public class Comment {
 //    private LocalDateTime modifiedDate;
 
 
+    //== 생성 메서드 ==//
+    public static Comment createComment(Member member, Post post, String comments) {
+        Comment comment = new Comment();
+        comment.member = member;
+        comment.post = post;
+        comment.comment = comments;
+
+        return comment;
+    }
+
     //== 댓글 수정 메서드 ==//
     public void updateComment(String comment) {
         this.comment = comment;

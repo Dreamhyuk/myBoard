@@ -1,9 +1,24 @@
 body {
     padding-top: 5rem;
+    padding-bottom: 5rem;
 }
 .starter-template {
     padding: 3rem 1.5rem;
     text-align: center;
+}
+.text-container  {
+    display: grid;
+    grid-template-columns: 110ch auto; /* 첫 번째 열은 100ch, 나머지 공간은 자동으로 채움 */
+}
+.left-text {
+    word-wrap: break-word; /* 긴 단어를 강제로 끊음 */
+    white-space: normal;   /* 기본 줄바꿈 설정 */
+    font-weight: normal;   /* 글씨 굵기 보통 */
+}
+.right-text {
+    white-space: nowrap;    /* 줄바꿈 방지 */
+    justify-self: end; /* 가로 방향 오른쪽 정렬 */
+    align-self: end;   /* 세로 방향 아래 정렬 */
 }
 .limit-text {
     width: 65%; /* 칼럼의 최대 너비 설정 */
@@ -11,5 +26,6 @@ body {
     max-width: 100px;
     white-space: nowrap; /* 텍스트를 한 줄로 제한 */
     overflow: hidden; /* 넘치는 텍스트 숨기기 */
-    text-overflow: ellipsis; /* 생략 부호(...) 표시
+    text-overflow: ellipsis; /* 생략 부호(...) 표시 */
 }
+

@@ -17,6 +17,7 @@ import study.my_board.repository.PostRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -34,38 +35,46 @@ public class PostService {
 //        return postPage.map(this::toPostDto);
 //    }
     @Transactional(readOnly = true)
-    public Page<PostDto> findBySearchKeyword(String title, String content, Pageable pageable) {
-        Page<Post> postPage = postRepository.findByTitleContainingOrContentContaining(title, content, pageable);
+    public Page<PostDto.Response> findBySearchKeyword(String title, String content, Pageable pageable) {
+        Page<Post> postList = postRepository.findByTitleContainingOrContentContaining(title, content, pageable);
 
-        return postPage.map(this::toPostDto);
+        Page<PostDto.Response> result = postList.map(p -> new PostDto.Response(p));
+        return result;
     }
 
-    private PostDto toPostDto(Post post) {
-        PostDto postDto = PostDto.builder()
-                .id(post.getId())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .memberDto(new MemberDto(post.getMember()))
-                .build();
-
-        return postDto;
-    }
+//    private PostDto PostDto(Post post) {
+//        PostDto postDto = PostDto.builder()
+//                .id(post.getId())
+//                .title(post.getTitle())
+//                .content(post.getContent())
+////                .memberDto(new MemberDto(post.getMember()))
+//                .author(post.getMember().getUsername())
+//                .comments(post.getComments())
+//                .build();
+//
+//        return postDto;
+//    }
+//    private PostDto PostDto(Post post) {
+//        PostDto postDto = PostDto.builder()
+//                .id(post.getId())
+//                .title(post.getTitle())
+//                .content(post.getContent())
+//                .memberDto(new MemberDto(post.getMember()))
+//                .comments(post.getComments())
+//                .build();
+//
+//        return postDto;
+//    }
 
     //글 작성
-    @Transactional(readOnly = false)
-    public Long write(PostDto postDto, Long memberId) {
-
-//        Member member = memberRepository.findByUsername(username)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    @Transactional
+    public Long write(PostDto.Request request, Long memberId) {
+        //엔티티 조회
         Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Member not found"));
 
-        //Dto를 엔티티로 변환
-        Post post = Post.builder()
-                .title(postDto.getTitle())
-                .content(postDto.getContent())
-                .member(member)
-                .build();
+        request.setMember(member);
+        Post post = request.toEntity();
         postRepository.save(post);
 
         return post.getId();
@@ -78,22 +87,32 @@ public class PostService {
 
     //특정 게시글 불러오기, 엔티티로 반환
     @Transactional
-    public PostDto findPost(Long postId) {
+    public PostDto.Response findPost(Long postId) {
 
         //엔티티 조회
-        Post post = postRepository.findById(postId).orElse(null);
-        Member member = memberRepository.findById(post.getMember().getId()).orElse(null);
-
-        MemberDto memberDto = MemberDto.builder()
-                .id(member.getId())
-                .username(member.getUsername())
-                .password(member.getPassword())
-                .enabled(member.getEnabled())
-                .build();
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found!"));
 
         //Dto로 변환 후 반환
-        return new PostDto(post, memberDto);
+        return new PostDto.Response(post);
     }
+//    @Transactional
+//    public PostDto findPost(Long postId) {
+//
+//        //엔티티 조회
+//        Post post = postRepository.findById(postId).orElse(null);
+//        Member member = memberRepository.findById(post.getMember().getId()).orElse(null);
+//
+//        MemberDto memberDto = MemberDto.builder()
+//                .id(member.getId())
+//                .username(member.getUsername())
+//                .password(member.getPassword())
+//                .enabled(member.getEnabled())
+//                .build();
+//
+//        //Dto로 변환 후 반환
+//        return new PostDto(post, memberDto);
+//    }
 
     //수정 권한: 작성자
     public boolean canEditPost(Long postId, Long currentUserId) {
@@ -114,10 +133,9 @@ public class PostService {
     }
 
     @Transactional
-    public Post updatePost(Long postId, PostDto updateDto) {
-
+    public Post updatePost(Long postId, PostDto.Request request) {
         Post post = postRepository.findById(postId).orElse(null);
-        post.updatePost(updateDto.getTitle(), updateDto.getContent());
+        post.updatePost(request.getTitle(), request.getContent());
 
         return postRepository.save(post);
     }
