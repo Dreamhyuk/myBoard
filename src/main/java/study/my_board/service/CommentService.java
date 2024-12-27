@@ -45,13 +45,10 @@ public class CommentService {
 
 
     /* 페이징 댓글 조회 */
-    public List<CommentDto.Response> findPagedComment(Long postId, int size) {
-        Pageable pageable = PageRequest.of(0, size);
+    public Page<CommentDto.Response> findPagedComment(Long postId, Pageable pageable) {
 
-        List<CommentDto.Response> result = commentRepository.findByPostId(postId, pageable)
-                .getContent().stream()
-                .map(c -> new CommentDto.Response(c))
-                .collect(Collectors.toList());
+        Page<CommentDto.Response> result = commentRepository.findByPostId(postId, pageable)
+                .map(c -> new CommentDto.Response(c));
         return result;
     }
 
@@ -66,6 +63,7 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
+    /* 페이징 조회 */
     public Page<CommentDto.Response> findAll(Long postId, Pageable pageable) {
         Page<Comment> comments = commentRepository.findByPostId(postId, pageable);
         Page<CommentDto.Response> result = comments.map(c -> new CommentDto.Response(c));

@@ -42,29 +42,6 @@ public class PostService {
         return result;
     }
 
-//    private PostDto PostDto(Post post) {
-//        PostDto postDto = PostDto.builder()
-//                .id(post.getId())
-//                .title(post.getTitle())
-//                .content(post.getContent())
-////                .memberDto(new MemberDto(post.getMember()))
-//                .author(post.getMember().getUsername())
-//                .comments(post.getComments())
-//                .build();
-//
-//        return postDto;
-//    }
-//    private PostDto PostDto(Post post) {
-//        PostDto postDto = PostDto.builder()
-//                .id(post.getId())
-//                .title(post.getTitle())
-//                .content(post.getContent())
-//                .memberDto(new MemberDto(post.getMember()))
-//                .comments(post.getComments())
-//                .build();
-//
-//        return postDto;
-//    }
 
     //글 작성
     @Transactional
@@ -93,26 +70,10 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found!"));
 
-        //Dto로 변환 후 반환
+        //Dto 로 변환 후 반환
         return new PostDto.Response(post);
     }
-//    @Transactional
-//    public PostDto findPost(Long postId) {
-//
-//        //엔티티 조회
-//        Post post = postRepository.findById(postId).orElse(null);
-//        Member member = memberRepository.findById(post.getMember().getId()).orElse(null);
-//
-//        MemberDto memberDto = MemberDto.builder()
-//                .id(member.getId())
-//                .username(member.getUsername())
-//                .password(member.getPassword())
-//                .enabled(member.getEnabled())
-//                .build();
-//
-//        //Dto로 변환 후 반환
-//        return new PostDto(post, memberDto);
-//    }
+
 
     //수정 권한: 작성자
     public boolean canEditPost(Long postId, Long currentUserId) {

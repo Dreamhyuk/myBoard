@@ -2,6 +2,10 @@ package study.my_board.api;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +39,9 @@ public class CommentApiController {
 
     /* 페이징 조회 */
     @GetMapping("/board/view/{postId}/pagedComments")
-    public List<CommentDto.Response> getPagedComment(@PathVariable Long postId) {
-        return commentService.findPagedComment(postId, 5);
+    public Page<CommentDto.Response> getPagedComment(@PathVariable Long postId,
+                                                     @PageableDefault(size = 5, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
+        return commentService.findPagedComment(postId, pageable);
     }
 
     /* 전체 조회 */

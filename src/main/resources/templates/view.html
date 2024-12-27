@@ -33,14 +33,27 @@
                th:onclick="|deletePost(${post.id})|">글 삭제</button>
         </div>
 
-        <div style="margin-top: 40px;"><span th:text="${comments.totalElements}"></span> Comments</div>
-        <hr class="section-divider">
-        <ul class="list-group list-group-flush" style="margin-top: -15px;">
-            <li class="list-group-item" th:each="item : ${comments}">
-                <div th:text="${item.username}" class="text-muted fst-italic mb-2" style="font-weight: bold">작성자</div>
-                <div th:text="${item.comment}">댓글 내용</div>
-            </li>
-        </ul>
+        <div id="comment-count" style="margin-top: 40px;">
+<!--            <span th:text="${comments.totalElements}"></span> Comments-->
+        </div>
+        <hr class="comment-divider">
+<!--        <ul class="list-group list-group-flush" style="margin-top: -15px;">-->
+<!--            <li class="list-group-item" th:each="item : ${comments}">-->
+<!--                <div th:text="${item.username}" class="text-muted fst-italic mb-2" style="font-weight: bold">작성자</div>-->
+<!--                <div th:text="${item.comment}">댓글 내용</div>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--        <hr class="section-divider">-->
+
+        <div id="comment-list">
+            <!-- 댓글 목록 -->
+        </div>
+        <!-- 페이지네이션 영역 -->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center" id="pagination">
+                <!-- 페이지 버튼이 여기에 동적으로 추가 -->
+            </ul>
+        </nav>
         <!-- 댓글 작성 폼 -->
         <form id="comment-form" style="margin-top: 10px;">
             <div class="form-group">
@@ -55,43 +68,7 @@
     </div>
 
     <footer th:replace="fragments/common :: footer"></footer>
-    <script>
-        function deletePost(id) {
-            //DELETE /api/board/{id}
-            $.ajax({
-                url: '/api/board/' + id,
-                type: 'DELETE',
-                success: function(result) {
-                    console.log('result', result);
-                    alert('삭제되었습니다.')
-                    window.location.href = '/board/list';
-                }
-            });
-        }
-
-        $('#create-comment-btn').on('click', function() {
-            const id = $(this).data('id'); // 버튼의 data-id 값을 가져옴
-            const commentData = {
-                comment: $('#comment-content').val() // 댓글 내용
-            };
-            console.log('전송할 데이터:', commentData);
-
-            $.ajax({
-                url: '/api/board/view/' + id + '/comments',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(commentData),
-                success: function(result) {
-                    alert('댓글을 작성했습니다.');
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('댓글 작성에 실패했습니다.');
-                }
-            });
-        });
-
-    </script>
+    <script src="/js/comments.js"></script>
 
 </body>
 </html>

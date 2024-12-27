@@ -77,7 +77,7 @@ public class PostController {
 
         Long currentUserId = currentUser.getId();
         PostDto.Response postDto = postService.findPost(postId);
-        Page<CommentDto.Response> comments = commentService.findAll(postId, pageable);
+//        Page<CommentDto.Response> comments = commentService.findAll(postId, pageable);
 
         boolean canEdit = postService.canEditPost(postId, currentUserId);
         boolean canDelete = postService.canDeletePost(postId, currentUserId);
@@ -86,14 +86,14 @@ public class PostController {
         model.addAttribute("canEdit", canEdit);
         model.addAttribute("canDelete", canDelete);
 
-        int nowPage = comments.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(1, nowPage - 2);
-        int endPage = Math.min(comments.getTotalPages(), nowPage + 2);
-
-        model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
-        model.addAttribute("comments", comments);
+//        int nowPage = comments.getPageable().getPageNumber() + 1;
+//        int startPage = Math.max(1, nowPage - 2);
+//        int endPage = Math.min(comments.getTotalPages(), nowPage + 2);
+//
+//        model.addAttribute("nowPage", nowPage);
+//        model.addAttribute("startPage", startPage);
+//        model.addAttribute("endPage", endPage);
+//        model.addAttribute("comments", comments);
 
         return "view";
     }

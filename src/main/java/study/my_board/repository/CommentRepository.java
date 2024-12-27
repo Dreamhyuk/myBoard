@@ -1,5 +1,6 @@
 package study.my_board.repository;
 
+import jakarta.persistence.EntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,6 +14,7 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
+
 //    @Query("select c from Comment c join fetch c.post p")
     Optional<Comment> findByPostIdAndId(Long postId, Long commentId);
 
@@ -22,4 +24,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     //전체 댓글 조회
     List<Comment> findByPostId(Long postId);
 
+//    public Page<Comment> findAllWithMember() {
+//
+//
+//    }
 }
