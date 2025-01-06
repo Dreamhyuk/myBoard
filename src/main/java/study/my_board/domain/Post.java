@@ -83,8 +83,10 @@ public class Post {
         this.views = views;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
-        for (Comment comment: comments) {
-            this.addComment(comment);
+        if (comments != null) {
+            for (Comment comment: comments) {
+                this.addComment(comment);
+            }
         }
     }
 
