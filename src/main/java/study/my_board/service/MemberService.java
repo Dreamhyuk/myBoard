@@ -32,7 +32,7 @@ public class MemberService {
      * 회원 가입
      */
     @Transactional
-    public Long join(@Valid MemberDto memberDto) {
+    public Long join(MemberDto.Request memberDto) {
 
         //password를 암호화
         String encodedPassword = passwordEncoder.encode(memberDto.getPassword());
@@ -50,8 +50,6 @@ public class MemberService {
 
     //role 타입 비교
     public boolean isAdmin(Long memberId) {
-//        List<String> roles = memberRepository.findRolesByMemberId(memberId);
-//        return roles.contains("ROLE_ADMIN");
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found!"));
 
@@ -65,6 +63,5 @@ public class MemberService {
 //
 //        return member.getId();
 //    }
-
 
 }

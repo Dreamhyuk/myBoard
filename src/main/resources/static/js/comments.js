@@ -126,25 +126,8 @@ $(document).ready(function () {
             data: JSON.stringify(commentData),
             success: function (newComment) {
                 alert('댓글을 작성했습니다.');
-
-                // 현재 페이지 댓글 다시 로드
-                $.ajax({
-                    url: `/api/board/view/${id}/pagedComments?page=${currentPage}&size=${pageSize}`,
-                    type: 'GET',
-                    success: function (comments) {
-                        console.log('현재 페이지 댓글: ', comments);
-
-                        // 마지막 페이지 로드
-                        loadComments(totalPages - 1);
-
-                        // 댓글 입력창 초기화
-                        $('#comment-content').val('');
-                    },
-                    error: function (xhr, status, error) {
-                        console.error('댓글 작성 후 로드 실패:', error);
-                        alert('댓글 추가 후 데이터를 갱신하는 데 실패했습니다.');
-                    }
-                });
+                $('#comment-content').val(''); //댓글 입력창 초기화
+                loadComments(totalPages - 1);
             },
             error: function (xhr, status, error) {
                 console.error('댓글 작성 실패:', error);
@@ -157,75 +140,3 @@ $(document).ready(function () {
     loadComments(currentPage);
 
 });
-
-
-/*
-    //1. 페이지 로드 시 기존 댓글 불러오기
-    $.ajax({
-        url: '/api/board/view/' + id + '/pagedComments',
-        type: 'GET',
-        success: function(comments) {
-            console.log('기존 댓글: ', comments);
-
-            //댓글 리스트
-            comments.content.forEach(comment => {
-                const commentHtml = `
-                    <ul class="list-group list-group-flush" style="height: 100px;">
-                        <li class="list-group-item">
-                            <div class="text-muted fst-italic mb-2" style="font-weight: bold">${comment.username}</div>
-                            <div>${comment.comment}</div>
-                            <hr>
-                        </li>
-                    </ul>
-                `;
-                //댓글 리스트에 추가
-                $('#comment-list').append(commentHtml);
-            });
-        },
-        error: function (xhr, status, error) {
-            console.error('기존 댓글 로드 실패:', error);
-            alert('댓글을 불러오는 데 실패했습니다.');
-        }
-    });
-
-    //2. 댓글 작성 기능
-    $('#create-comment-btn').on('click', function() {
-        const commentData = {
-            comment: $('#comment-content').val() // 댓글 내용
-        };
-        console.log('전송할 데이터:', commentData);
-
-        //새 댓글 작성 요청
-        $.ajax({
-            url: '/api/board/view/' + id + '/comments',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(commentData),
-            success: function(newComment) {
-                alert('댓글을 작성했습니다.');
-
-                //새로운 댓글 DOM에 추가
-                const commentHtml = `
-                    <ul class="list-group list-group-flush" style="height: 100px;">
-                        <li class="list-group-item">
-                            <div class="text-muted fst-italic mb-2" style="font-weight: bold">${newComment.username}</div>
-                            <div>${newComment.comment}</div>
-                            <hr>
-                        </li>
-                    </ul>
-                `;
-
-                //댓글 리스트에 추가
-                $('#comment-list').append(commentHtml);
-
-                //댓글 입력창 초기화
-                $('#comment-content').val('');
-            },
-            error: function(xhr, status, error) {
-                console.error('Error:', error);
-                alert('댓글 작성에 실패했습니다.');
-            }
-        });
-    });
-});
-*/

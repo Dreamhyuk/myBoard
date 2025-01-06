@@ -16,14 +16,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //    select m from Member m where m.username = :username
         Member findByUsername(String username);
 
-        @EntityGraph(attributePaths = {"posts"})
-        List<Member> findAll();
+//        @EntityGraph(attributePaths = {"posts"})
+//        List<Member> findAll();
 
-        @Query("select r.name from Role r " +
-                "join r.memberRoles mr " +
-                "join mr.member m " +
-                "where m.id = :memberId")
-        List<String> findRolesByMemberId(@Param("memberId") Long memberId);
+//        @Query("select r.name from Role r " +
+//                "join r.memberRoles mr " +
+//                "join mr.member m " +
+//                "where m.id = :memberId")
+//        List<String> findRolesByMemberId(@Param("memberId") Long memberId);
 
 
         @Query("select m from Member m " +

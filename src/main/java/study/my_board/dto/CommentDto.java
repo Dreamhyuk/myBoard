@@ -7,6 +7,7 @@ import study.my_board.domain.Comment;
 import study.my_board.domain.Member;
 import study.my_board.domain.Post;
 
+
 public class CommentDto {
 
     @Data
@@ -21,10 +22,13 @@ public class CommentDto {
         @Size(min = 2)
         private String comment;
 
+        public Request(String comment) {
+        }
+
         /* Dto -> Entity */
         public Comment toEntity() {
             Comment comments = Comment.builder()
-//                    .id(id)
+                    .id(id)
                     .member(member)
                     .post(post)
                     .comment(comment)

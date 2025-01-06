@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import study.my_board.domain.Member;
 import study.my_board.domain.Post;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,13 +33,19 @@ public class PostDto {
         private String content;
         private Member member;
 
+        private final String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));;
+        private final String modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));;
+        private int views;
+
         /* Dto -> Entity */
         public Post toEntity() {
             Post post = Post.builder()
-                    .id(id)
                     .title(title)
                     .content(content)
                     .member(member)
+                    .views(0)
+                    .createdDate(createdDate)
+                    .modifiedDate(modifiedDate)
                     .build();
             return post;
         }
@@ -51,6 +59,9 @@ public class PostDto {
         private String author;
         private Long memberId;
         private List<CommentDto.Response> comments;
+        private String createdDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));;
+        private String modifiedDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd HH:mm"));;
+        private int views;
 
         /* Entity -> Dto */
         public Response(Post post) {
@@ -59,6 +70,9 @@ public class PostDto {
             this.content = post.getContent();
             this.author = post.getMember().getUsername();
             this.memberId = post.getMember().getId();
+            this.createdDate = post.getCreatedDate();
+            this.modifiedDate = post.getModifiedDate();
+            this.views = post.getViews();
 //            this.comments = post.getComments().stream()
 //                    .map(c -> new CommentDto.Response(c))
 //                    .collect(Collectors.toList());

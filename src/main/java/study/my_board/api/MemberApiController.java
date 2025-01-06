@@ -20,13 +20,13 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final MemberRepository memberRepository;
-    private final EntityManager em;
 
 
     //memberRole 에서 Role이 Lazy여서 프록시로 관리되기 때문에 직렬화가 불가능함. (엔티티 직접 반환)
     @GetMapping("/users")
     List<Member> all() {
         return memberRepository.findAll();
+//        memberService.
     }
 
 

@@ -29,11 +29,6 @@ public class PostService {
     private final MemberService memberService;
 
     //게시글 리스트 처리
-//    @Transactional(readOnly = true)
-//    public Page<PostDto> boardList(Pageable pageable) {
-//        Page<Post> postPage = postRepository.findAll(pageable);
-//        return postPage.map(this::toPostDto);
-//    }
     @Transactional(readOnly = true)
     public Page<PostDto.Response> findBySearchKeyword(String title, String content, Pageable pageable) {
         Page<Post> postList = postRepository.findByTitleContainingOrContentContaining(title, content, pageable);
@@ -41,7 +36,6 @@ public class PostService {
         Page<PostDto.Response> result = postList.map(p -> new PostDto.Response(p));
         return result;
     }
-
 
     //글 작성
     @Transactional
@@ -99,6 +93,11 @@ public class PostService {
         post.updatePost(request.getTitle(), request.getContent());
 
         return postRepository.save(post);
+    }
+
+    @Transactional
+    public int updateViews(Long postId) {
+        return postRepository.updateViews(postId);
     }
 
 //    @PreAuthorize("hasRole('ADMIN') or (hasRole('USER') and @postService.isAuthor(#postId, authentication.principal.id)")

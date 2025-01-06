@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Member member = memberRepository.findByUsernameWithRoles(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        session.setAttribute("member", new MemberDto(member));
+        session.setAttribute("member", new MemberDto.Response(member));
 
         return new CustomUserDetails(member);
     }

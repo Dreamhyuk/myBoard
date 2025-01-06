@@ -63,13 +63,6 @@ public class CommentService {
                 .collect(Collectors.toList());
     }
 
-    /* 페이징 조회 */
-    public Page<CommentDto.Response> findAll(Long postId, Pageable pageable) {
-        Page<Comment> comments = commentRepository.findByPostId(postId, pageable);
-        Page<CommentDto.Response> result = comments.map(c -> new CommentDto.Response(c));
-        return result;
-    }
-
     /* 댓글 수정 */
     @Transactional
     public void update(Long postId, Long commentId, CommentDto.Request request) {

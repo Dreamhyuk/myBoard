@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +19,7 @@ import static jakarta.persistence.FetchType.*;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+//@Builder
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +31,6 @@ public class Post {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
-    private List<Comment> comments = new ArrayList<>();
 
     @NotNull
     @Size(min = 2, max = 60)
@@ -39,18 +40,17 @@ public class Post {
     @Size(min = 2)
     private String content;
 
-//    @Builder
-//    public Post(Member member, String title, String content) {
-//        this.member = member;
-//        this.title = title;
-//        this.content = content;
-//    }
-//
-//    //== 생성 메서드 ==//
-//    @Builder
-//    public static Post createPost(Member member, String title, String content) {
-//        return new Post(member, title, content);
-//    }
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE)
+    private final List<Comment> comments = new ArrayList<>();
+
+    private int views;
+
+    @CreatedDate
+    private String createdDate;
+
+    @LastModifiedDate
+    private String modifiedDate;
+
 
     //== 연관관계 메서드 ==//
     public void setMember(Member member) {
@@ -64,4 +64,31 @@ public class Post {
         this.content = content;
     }
 
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
+    }
+
+    public Post(Member member, String title, String content) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+    }
+
+    @Builder
+    public Post(Member member, String title, String content, int views, String createdDate, String modifiedDate, Comment... comments) {
+        this.member = member;
+        this.title = title;
+        this.content = content;
+        this.views = views;
+        this.createdDate = createdDate;
+        this.modifiedDate = modifiedDate;
+        for (Comment comment: comments) {
+            this.addComment(comment);
+        }
+    }
+
+//    public static Post createPost(Member member, String title, String content, Comment... comments) {
+//        return new Post(member, title, content, comments);
+//    }
 }

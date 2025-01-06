@@ -26,7 +26,7 @@ public class MemberController {
     }
 
     @PostMapping("/signup")
-    public String signup(MemberDto memberDto) {
+    public String signup(MemberDto.Request memberDto) {
         memberService.join(memberDto);
         return "redirect:/";
     }

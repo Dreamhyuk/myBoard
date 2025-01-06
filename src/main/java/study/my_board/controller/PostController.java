@@ -72,28 +72,19 @@ public class PostController {
 
     @GetMapping("/board/view/{postId}")
     public String viewPost(@PathVariable Long postId, Model model,
-                           @AuthenticationPrincipal CustomUserDetails currentUser,
-                           @PageableDefault(size = 5, direction = Sort.Direction.ASC) Pageable pageable) {
+                           @AuthenticationPrincipal CustomUserDetails currentUser) {
 
         Long currentUserId = currentUser.getId();
         PostDto.Response postDto = postService.findPost(postId);
-//        Page<CommentDto.Response> comments = commentService.findAll(postId, pageable);
 
         boolean canEdit = postService.canEditPost(postId, currentUserId);
         boolean canDelete = postService.canDeletePost(postId, currentUserId);
 
+        postService.updateViews(postId); //views++
+
         model.addAttribute("post", postDto);
         model.addAttribute("canEdit", canEdit);
         model.addAttribute("canDelete", canDelete);
-
-//        int nowPage = comments.getPageable().getPageNumber() + 1;
-//        int startPage = Math.max(1, nowPage - 2);
-//        int endPage = Math.min(comments.getTotalPages(), nowPage + 2);
-//
-//        model.addAttribute("nowPage", nowPage);
-//        model.addAttribute("startPage", startPage);
-//        model.addAttribute("endPage", endPage);
-//        model.addAttribute("comments", comments);
 
         return "view";
     }

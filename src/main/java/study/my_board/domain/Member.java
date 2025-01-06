@@ -2,14 +2,15 @@ package study.my_board.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter @Setter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +37,27 @@ public class Member {
         memberRoles.add(memberRole);
     }
 
+    public void addMemberRole(MemberRole memberRole) {
+        memberRoles.add(memberRole);
+        memberRole.setMember(this);
+    }
+
+    @Builder
+    public Member(Long id, String username, String password, Boolean enabled) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+    }
+
     //== 생성 메서드 ==//
-    public static Member createMember(String username, String password) {
+    public static Member createMember(String username, String password, MemberRole... memberRoles) {
         Member member = new Member();
         member.setUsername(username);
         member.setPassword(password);
+        for (MemberRole memberRole: memberRoles) {
+            member.addMemberRole(memberRole);
+        }
         member.setEnabled(true);
 
         return member;

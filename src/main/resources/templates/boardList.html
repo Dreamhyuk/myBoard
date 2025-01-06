@@ -34,7 +34,7 @@
                     <th class="col-md-6 text-center">제목</th>
                     <th scope="col">작성자</th>
                     <th scope="col" class="text-center">작성일</th>
-                    <th scope="col" class="text-center">조회수</th>
+                    <th scope="col" class="text-center">조회</th>
                 </tr>
             </thead>
             <tbody>
@@ -44,8 +44,8 @@
                         <a th:text="${board.title}" th:href="@{/board/view/{postId}(postId=${board.id})}">Otto</a>
                     </td>
                     <td th:text="${board.author}">홍길동</td>
-                    <td class="text-center">2020-04-05</td>
-                    <td class="text-center">3</td>
+                    <td class="text-center" th:text="${board.createdDate}">2020-04-05</td>
+                    <td class="text-center" th:text="${board.views}">3</td>
                 </tr>
             </tbody>
         </table>
@@ -65,7 +65,7 @@
         <div class="text-right">
             <a type="button" class="btn btn-primary" th:href="@{/board/write}">글 쓰기</a>
         </div>
-
+    </div>
 
 
 </main>

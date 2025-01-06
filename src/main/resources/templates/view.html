@@ -18,9 +18,12 @@
         <header>
             <div class="text-container">
                 <h1 class="fw-bolder mb-1 left-text" th:text="${post.title}"></h1>
-                <div class="right-text" >2020-00-00</div>
+                <div class="right-text" th:text="${post.createdDate}">2020-00-00</div>
             </div>
-            <div class="text-muted fst-italic mb-2" style="font-weight: bold" th:text="${post.author}" ></div>
+            <div class="text-container">
+                <div class="text-muted fst-italic mb-2" style="font-weight: bold" th:text="${post.author}" ></div>
+                <div class="right-text">조회: <span th:text="${post.views}"></span></div>
+            </div>
         </header>
 
         <hr class="section-divider">
@@ -33,18 +36,8 @@
                th:onclick="|deletePost(${post.id})|">글 삭제</button>
         </div>
 
-        <div id="comment-count" style="margin-top: 40px;">
-<!--            <span th:text="${comments.totalElements}"></span> Comments-->
-        </div>
-        <hr class="comment-divider">
-<!--        <ul class="list-group list-group-flush" style="margin-top: -15px;">-->
-<!--            <li class="list-group-item" th:each="item : ${comments}">-->
-<!--                <div th:text="${item.username}" class="text-muted fst-italic mb-2" style="font-weight: bold">작성자</div>-->
-<!--                <div th:text="${item.comment}">댓글 내용</div>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--        <hr class="section-divider">-->
 
+        <hr class="comment-divider" style="margin-top: 40px;">
         <div id="comment-list">
             <!-- 댓글 목록 -->
         </div>
