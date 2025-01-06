@@ -12,8 +12,6 @@ import study.my_board.dto.MemberDto;
 import study.my_board.repository.MemberRepository;
 import study.my_board.repository.MemberRoleRepository;
 import study.my_board.repository.RoleRepository;
-//import study.my_board.domain.Member;
-//import study.my_board.repository.MemberRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,7 +23,6 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final RoleRepository roleRepository;
-    private final MemberRoleRepository memberRoleRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -57,11 +54,5 @@ public class MemberService {
                 .map(MemberRole::getRole)
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
     }
-
-//    public Long findIdByUsername(String username) {
-//        Member member = memberRepository.findOneByUsername(username);
-//
-//        return member.getId();
-//    }
 
 }
