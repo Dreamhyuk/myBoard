@@ -73,9 +73,6 @@ public class PostDto {
             this.createdDate = post.getCreatedDate();
             this.modifiedDate = post.getModifiedDate();
             this.views = post.getViews();
-//            this.comments = post.getComments().stream()
-//                    .map(c -> new CommentDto.Response(c))
-//                    .collect(Collectors.toList());
         }
     }
 

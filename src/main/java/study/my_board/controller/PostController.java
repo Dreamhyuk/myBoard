@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import study.my_board.authentication.CustomUserDetails;
-import study.my_board.dto.CommentDto;
 import study.my_board.dto.PostDto;
 import study.my_board.service.CommentService;
 import study.my_board.service.PostService;
@@ -22,7 +21,6 @@ import study.my_board.validator.PostValidator;
 @RequiredArgsConstructor
 public class PostController {
 
-    private final CommentService commentService;
     private final PostService postService;
     private final PostValidator boardValidator;
 

@@ -31,8 +31,8 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post;
 
-//    @NotNull
-//    @Size(min = 2)
+    @NotNull
+    @Size(min = 2, message = "댓글을 2글자 이상 작성해주세요.")
     private String comment; //댓글 내용
 
 

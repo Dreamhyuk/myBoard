@@ -8,7 +8,6 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +18,6 @@ import static jakarta.persistence.FetchType.*;
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-//@Builder
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,21 +74,13 @@ public class Post {
     }
 
     @Builder
-    public Post(Member member, String title, String content, int views, String createdDate, String modifiedDate, Comment... comments) {
+    public Post(Member member, String title, String content, int views, String createdDate, String modifiedDate) {
         this.member = member;
         this.title = title;
         this.content = content;
         this.views = views;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
-        if (comments != null) {
-            for (Comment comment: comments) {
-                this.addComment(comment);
-            }
-        }
     }
 
-//    public static Post createPost(Member member, String title, String content, Comment... comments) {
-//        return new Post(member, title, content, comments);
-//    }
 }
