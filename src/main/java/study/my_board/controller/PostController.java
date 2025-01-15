@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import study.my_board.authentication.CustomUserDetails;
 import study.my_board.dto.PostDto;
-import study.my_board.service.CommentService;
 import study.my_board.service.PostService;
 import study.my_board.validator.PostValidator;
 

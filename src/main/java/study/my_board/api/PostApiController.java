@@ -40,7 +40,6 @@ public class PostApiController {
 
     }
 
-
     @GetMapping("/board/{id}")
     Post one(@PathVariable Long id) {
 
