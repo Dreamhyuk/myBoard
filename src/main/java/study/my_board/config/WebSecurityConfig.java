@@ -37,7 +37,7 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/api/**").permitAll() // 우선순위를 명확히
-                        .requestMatchers("/", "/account/signup", "/css/**").permitAll()
+                        .requestMatchers("/", "/account/signup", "/css/**", "/images/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form

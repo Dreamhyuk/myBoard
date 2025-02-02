@@ -28,4 +28,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     //댓글과 작성자를 함께 조회
     @Query("select c from Comment c join fetch c.member where c.post.id = :postId")
     Page<Comment> findCommentWithMemberByPostId(@Param("postId") Long postId, Pageable pageable);
+
+    long countByPostId(Long id);
 }

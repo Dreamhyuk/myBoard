@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import study.my_board.authentication.CustomUserDetails;
@@ -24,6 +25,7 @@ public class CommentApiController {
 
     private final CommentService commentService;
     private final CommentRepository commentRepository;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /* 댓글 작성 */
     @PostMapping("/board/view/{postId}/comments")
@@ -31,8 +33,11 @@ public class CommentApiController {
                                                      @RequestBody @Valid CommentDto.Request request,
                                                      @AuthenticationPrincipal CustomUserDetails currentUser) {
 
-        commentService.save(currentUser.getId(), postId, request);
+        Long savedComment = commentService.save(currentUser.getId(), postId, request);
         CommentDto.Response response = new CommentDto.Response(request.toEntity());
+
+        // WebSocket 구독자에게 전송
+        messagingTemplate.convertAndSend("/topic/comments", savedComment);
 
         return ResponseEntity.ok(response);
     }
@@ -68,5 +73,10 @@ public class CommentApiController {
         return ResponseEntity.ok(commentId);
     }
 
+    @GetMapping("/board/view/{postId}/commentCount")
+    public ResponseEntity<Long> getCommentCount(@PathVariable Long postId) {
+        long commentCount = commentRepository.countByPostId(postId);
+        return ResponseEntity.ok(commentCount);
+    }
 
 }
